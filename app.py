@@ -8,8 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 class SapnaOnline:
     def __init__(self):
-        # self.driver = webdriver.Chrome()
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Chrome()
+        # self.driver = webdriver.Firefox()
         self.driver.get('https://www.sapnaonline.com/shop/fiction/')
         self.driver.implicitly_wait(5)
         self.wait = WebDriverWait(self.driver, 20)
