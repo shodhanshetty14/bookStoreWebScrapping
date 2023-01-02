@@ -6,25 +6,44 @@ from selenium.webdriver.common.by import By
 
 class SapnaOnline:
     def __init__(self):
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Chrome()
+        # self.driver = webdriver.Firefox()
         self.driver.get('https://www.sapnaonline.com/shop/fiction/')
         self.driver.implicitly_wait(5)
-        print('hello')
 
 
     def fict_novel(self):
-        print('hey')
-        # bookCards = self.driver.find_elements(By.CSS_SELECTOR, 'div.CategoryTabInner__ProductBox-qaa80s-0 > div')
-        # for card in bookCards:
-        print('hello')
-        imageLink = self.driver.find_element(By.CLASS_NAME, 'bookImage').get_attribute('src')
-        
-        bookName = self.driver.find_element(By.CLASS_NAME, 'ProductCard__AboutText-sc-10n3822-2 kOZyab link').text
-        
-        authorName = self.driver.find_element(By.CLASS_NAME, 'ProductCard__AuthorText-sc-10n3822-4 cZBirR').text
-        
-        print(imageLink, bookName, authorName)
-        self.driver.quit()
+        BookLinks = []
+        booksBox = self.driver.find_element(By.XPATH, '/html/body/div/div/div/div[3]/div[1]/div/div/div/div/div/div/div[2]/div[2]/div[2]/div/div/div/div[1]/div')
+        bookTags = booksBox.find_elements(By.TAG_NAME, 'a')
+        for tag in bookTags:
+            link = tag.get_attribute('href')
+            if link in BookLinks:
+                continue
+            elif "/books/" in link:
+                BookLinks.append(link)
+        # print(BookLinks)
+        return BookLinks
+
+
+    def book_details(self, books):
+        data = {}
+        for book in books:
+            self.driver.get(book)
+            
+            image = self.driver.find_element(By.XPATH, "/html/body/div/div/div/div[3]/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/div[1]/div[2]/div/div/div/div/div/div/div/div/img[2]").get_attribute('src')
+            data['image'] = image
+            
+            title = self.driver.find_element(By.XPATH, "/html/body/div/div/div/div[3]/div/div[1]/div[1]/div/div/div/div/div[2]/div[3]/div/div[2]/h1").text
+            data['title'] = title
+            
+            price = self.driver.find_element(By.XPATH, "/html/body/div/div/div/div[3]/div/div[1]/div[1]/div/div/div/div/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]").text
+            data['price'] = price
+            
+            description = self.driver.find_element(By.XPATH, "/html/body/div/div/div/div[3]/div/div[1]/div[2]/div/div/div/div/div[2]/div/div/div/div/div[2]/div[1]/div/div[2]/div/span").text
+            data['description'] = description
+            
+            print(data)
 
 
 def postReq(data):
@@ -35,4 +54,5 @@ def postReq(data):
 
 if __name__ == '__main__':
     bot = SapnaOnline()
-    bot.fict_novel()
+    books = bot.fict_novel()
+    bot.book_details(books)
