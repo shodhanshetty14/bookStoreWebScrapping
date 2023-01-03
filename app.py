@@ -4,7 +4,10 @@ from time import sleep
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+import requests
 
+
+API_URL = 'http://localhost:3000/books'
 
 class SapnaOnline:
     def __init__(self):
@@ -30,9 +33,11 @@ class SapnaOnline:
 
     def book_details(self, books):
         data = {}
+        posting = {}
         for book in books:
             self.driver.get(book)
-            self.wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div/div/div[3]/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/div[1]/div[2]/div/div/div/div/div/div/div/div/img[2]")))
+            sleep(4)
+            # self.wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div/div/div[3]/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/div[1]/div[2]/div/div/div/div/div/div/div/div/img[2]")))
             
             image = self.driver.find_element(By.XPATH, "/html/body/div/div/div/div[3]/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/div[1]/div[2]/div/div/div/div/div/div/div/div/img[2]").get_attribute('src')
             data['image'] = image
@@ -59,12 +64,18 @@ class SapnaOnline:
             data['publish date'] = pubDate
             
             print(data,'\n')
+            # posting['title'] = title
+            # posting['author'] = author
+            self.postBook(title, author)
         self.driver.close()
 
 
-def postReq(data):
-    pass
-
+    def postBook(self, title, author):
+        res = {}
+        res['title'] = title
+        res['author'] = author
+        x = requests.post(API_URL, json = res)
+        print(x.text)
 
 
 
