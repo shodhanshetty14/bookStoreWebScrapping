@@ -16,8 +16,8 @@ class SapnaOnline:
         self.driver.get('https://www.sapnaonline.com/shop/fiction/')
         self.driver.implicitly_wait(5)
         self.wait = WebDriverWait(self.driver, 20)
-
-
+    
+    
     def fict_novel(self):
         BookLinks = []
         booksBox = self.driver.find_element(By.XPATH, '/html/body/div/div/div/div[3]/div[1]/div/div/div/div/div/div/div[2]/div[2]/div[2]/div/div/div/div[1]/div')
@@ -29,8 +29,8 @@ class SapnaOnline:
             elif "/books/" in link:
                 BookLinks.append(link)
         return BookLinks
-
-
+    
+    
     def book_details(self, books):
         data = {}
         posting = {}
@@ -67,13 +67,33 @@ class SapnaOnline:
             # posting['title'] = title
             # posting['author'] = author
             self.postBook(title, author)
+            self.postAuthors(author)
+            self.postPublisher(publisher)
         self.driver.close()
-
-
+    
+    
     def postBook(self, title, author):
         res = {}
         res['title'] = title
         res['author'] = author
+        x = requests.post(API_URL, json = res)
+        print(x.text)
+    
+    
+    def postAuthors(self, name):
+        res = {}
+        res['name'] = name
+        email = name.lower().replace(' ', '') + '@gmail.com'
+        res['email'] = email
+        x = requests.post(API_URL, json = res)
+        print(x.text)
+    
+    
+    def postPublisher(self, name):
+        res = {}
+        res['name'] = name
+        email = name.lower().replace(' ', '') + '@gmail.com'
+        res['email'] = email
         x = requests.post(API_URL, json = res)
         print(x.text)
 
