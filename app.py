@@ -7,13 +7,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 import requests
 
 
-API_URL = 'http://localhost:3000/books'
 
 class SapnaOnline:
     def __init__(self):
         self.driver = webdriver.Chrome()
-        # self.driver = webdriver.Firefox()
-        self.driver.get('https://www.sapnaonline.com/shop/fiction/')
+        # self.driver = webdriver.Firefox()         # if you want to use firefox driver 
+        # self.driver.get('https://www.sapnaonline.com/shop/fiction/')       # for fiction books link
+        self.driver.get('https://www.sapnaonline.com/shop/non-fiction')      # for non-fiction books link
         self.driver.implicitly_wait(5)
         self.wait = WebDriverWait(self.driver, 20)
     
@@ -73,6 +73,7 @@ class SapnaOnline:
     
     
     def postBook(self, title, author):
+        API_URL = 'http://localhost:3000/books'
         res = {}
         res['title'] = title
         res['author'] = author
@@ -81,6 +82,7 @@ class SapnaOnline:
     
     
     def postAuthors(self, name):
+        API_URL = 'http://localhost:3000/authors'
         res = {}
         res['name'] = name
         email = name.lower().replace(' ', '') + '@gmail.com'
@@ -90,6 +92,7 @@ class SapnaOnline:
     
     
     def postPublisher(self, name):
+        API_URL = 'http://localhost:3000/publisher'
         res = {}
         res['name'] = name
         email = name.lower().replace(' ', '') + '@gmail.com'
